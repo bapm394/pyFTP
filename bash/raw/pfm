@@ -1,0 +1,203 @@
+#! /bin/bash
+
+# Colors
+
+#----------------------------- Verde
+verde="\e[1;32m"
+#----------------------------- Verde Claro
+verdeclaro="\e[1;32m"
+#----------------------------- Rojo
+rojo="\e[1;31m"
+#----------------------------- Rojo Claro
+rojoclaro="\e[1;31m"
+#----------------------------- Azul
+azul="\e[34m"
+#----------------------------- Azul Claro
+azulclaro="\e[38;5;39m"
+#----------------------------- Cyan
+cyan="\e[36m"
+#----------------------------- Cyan Claro
+cyanclaro="\e[1;36m"
+#----------------------------- Morado
+morado="\e[35m"
+#----------------------------- Amarillo
+amarillo="\e[33m"
+#----------------------------- Naranja
+naranja="\e[38;5;214m"
+#----------------------------- Rosado
+rosado="\e[38;5;213m"
+#----------------------------- Gris
+gris="\e[1;30m"
+#----------------------------- Gris claro
+grisclaro="\e[37m"
+#----------------------------- Purpura
+purpura="\e[35m"
+#----------------------------- Purpura Claro
+purpuraclaro="\e[1;35m"
+#----------------------------- Marron
+marron="\e[33m"
+#----------------------------- Negro
+black="\e[30m"
+#----------------------------- Blanco
+blanco="\e[1;37m"
+
+# Values
+
+if [ "$PREFIX" = "/data/data/com.termux/files/usr" ]; then
+    termux="true"
+    #exit
+else
+    termux="false"
+fi
+ast="*"
+
+
+# Functions
+
+install_termux() {
+    echo -e "Termux Setup"
+    if [ -e "/data/data/com.termux/files/usr/bin/python" ]; then
+        echo -e "$blanco[$verde$ast$blanco] Python is installed"
+    else
+        echo -e "$blanco[$verde$ast$blanco] Python3 isn't installed, installing ..."
+        apt update; apt upgrade; apt install python
+    fi
+        if [ -e "/data/data/com.termux/files/usr/bin/wget" ]; then
+        null="null"
+    else
+        echo -e "$blanco[$verde$ast$blanco] Wget isn't installed, installing ..."
+        apt update; apt upgrade; apt install wget
+    fi
+    echo -e "$blanco[$verde$ast$blanco] Setting up Python library"
+    python3 -m pip install --upgrade pip; python3 -m pip install pyftplib >> /dev/null
+    wget https://raw.githubusercontent.com/bapm394/pyFTP/master/py/lib.py -O $TMPDIR/lib.py
+    mv $TMPDIR/lib.py $PREFIX/lib/python3.9/argparse_es.py >> /dev/null
+    wget https://raw.githubusercontent.com/bapm394/pyFTP/master/py/ftp.py -O $TMPDIR/ftp.py
+    mv $TMPDIR/ftp.py $PREFIX/bin/ftp.py ; chmod 755 $PREFIX/bin/ftp.py >> /dev/null
+    wget https://raw.githubusercontent.com/bapm394/pyFTP/master/bash/tale.bash -O $TMPDIR/tale.bash
+    mv $TMPDIR/tale.bash $PREFIX/bin/pyFTP ; chmod 755 $PREFIX/bin/pyFTP >> /dev/null
+    echo -e "$blanco[$verde$ast$blanco] Sucessfuly installed!"
+    echo -e "$blanco[$morado$ast$blanco] Try : "pyFTP -h" or "pyFTP --help""
+}
+
+install_dbl() {
+    if [ "$USER" = "root" ]; then
+        null="null"
+    else 
+        echo -e "$blanco[$rojo$ast$blanco] Need "sudo" or root user"
+        exit
+    fi
+    echo -e "Debian based Linux Setup"
+    if [ -e "/usr/bin/python" ]; then
+        echo -e "$blanco[$verde$ast$blanco] Python is installed"
+    else
+        echo -e "$blanco[$verde$ast$blanco] Python3 isn't installed, installing ..."
+        apt update; apt upgrade; apt install python
+       echo -e "Debian based Linux Setup"
+    fi
+    if [ -e "/usr/bin/wget" ]; then
+        null="null"
+    else
+        echo -e "$blanco[$verde$ast$blanco] Wget isn't installed, installing ..."
+        apt update; apt upgrade; apt install wget
+    fi
+    echo -e "$blanco[$verde$ast$blanco] Setting up Python library"
+    python3 -m pip install --upgrade pip; python3 -m pip install pyftplib >> /dev/null
+    wget https://raw.githubusercontent.com/bapm394/pyFTP/master/py/lib.py -O /tmp/lib.py
+    mv /tmp/lib.py /usr/lib/python3.9/argparse_es.py >> /dev/null
+    wget https://raw.githubusercontent.com/bapm394/pyFTP/master/py/ftp.py -O /tmp/ftp.py
+    mv /tmp/ftp.py /usr/bin/ftp.py ; chmod 755 /usr/bin/ftp.py >> /dev/null
+    wget https://raw.githubusercontent.com/bapm394/pyFTP/master/bash/dbl.bash -O /tmp/dbl.bash
+    mv /tmp/dbl.bash /usr/bin/pyFTP ; chmod 755 /usr/bin/pyFTP >> /dev/null
+    echo -e "$blanco[$verde$ast$blanco] Sucessfuly installed!"
+    echo -e "$blanco[$morado$ast$blanco] Try : "pyFTP -h" or "pyFTP --help""
+}
+
+install() {
+    if [ "$termux" = "true" ]; then
+        install_termux
+    elif [ "$termux" = "false" ]; then
+        install_dbl
+    else
+        echo -e "$blanco[$rojo$ast$blanco] Report issue on GitHub https://github.com/bapm394/pyFTp and put your system info"
+        echo -e "$blanco[$rojo$ast$blanco] Error code: #SysUR-oi1"
+    fi
+}
+
+uninstall_termux() {
+    echo -e "$blanco[$amarillo$ast$blanco] Uninstalling ..."
+    rm /data/data/com.termux/files/usr/bin/pyFTP >> /dev/null
+    rm /data/data/com.termux/files/usr/bin/ftp.py >> /dev/null
+    rm /data/data/com.termux/files/usr/lib/python3.9/argparse_es.py >> /dev/null
+    echo -e "$blanco[$amarillo$ast$blanco] Done!"
+}
+
+uninstall_dbl() {
+    if [ "$USER" = "root" ]; then
+        null="null"
+    else 
+        echo -e "$blanco[$rojo$ast$blanco] Need "sudo" or root user"
+        exit
+    fi
+    echo -e "$blanco[$amarillo$ast$blanco] Uninstalling ..."
+    rm /usr/bin/pyFTP >> /dev/null
+    rm /usr/bin/ftp.py >> /dev/null
+    rm /usr/lib/python3.9/argparse_es.py >> /dev/null
+    echo -e "$blanco[$amarillo$ast$blanco] Done!"
+}
+
+uninstall() {
+    if [ "$termux" = "true" ]; then
+        uninstall_termux
+    elif [ "$termux" = "false" ]; then
+        uninstall_dbl
+    else
+        echo -e "$blanco[$rojo$ast$blanco] Report issue on GitHub https://github.com/bapm394/pyFTp and put your system info"
+        echo -e "$blanco[$rojo$ast$blanco] Error code: #SysUR-ou2"
+    fi
+}
+
+help_termux() {
+    echo -e "Install pyFTP in your Termux"
+    echo -e "   Usage: pfm [-i/--install | -u/--uninstall | -h/--help]"
+    echo -e ""
+    echo -e "No help needed for commands, they are clearer than water"
+    echo -e ""
+    echo -e "https://github.com/bapm394/pyFTp"
+}
+
+help_dbl() {
+    echo -e "Install pyFTP in your Linux"
+    echo -e "   Usage: pfm [-i/--install | -u/--uninstall | -h/--help]"
+    echo -e ""
+    echo -e "No help needed for commands, they are clearer than water"
+    echo -e ""
+    echo -e "https://github.com/bapm394/pyFTp"
+}
+
+help() {
+    if [ "$termux" = "true" ]; then
+        help_termux
+    elif [ "$termux" = "false" ]; then
+        help_dbl
+    else
+        echo -e "$blanco[$rojo$ast$blanco] Report issue on GitHub https://github.com/bapm394/pyFTp and put your system info"
+        echo -e "$blanco[$rojo$ast$blanco] Error code: #SysUR-oh3"
+    fi
+}
+
+if [ "$1" != "" ]; then
+    case $1 in
+        -i|--install)
+        install;;
+        -u|--uninstall)
+        uninstall;;
+        -h|--help)
+        help;;
+        *)
+        echo -e "$blanco[$rojo$ast$blanco] Unrecogized argument, Try <-h> or <--help>";;
+    esac
+else
+    echo -e "$blanco[$cyan$ast$blanco] I have 3 commands, you can try "-h" or "--help" to see 2 more"
+    exit
+fi
